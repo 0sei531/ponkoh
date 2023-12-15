@@ -13,8 +13,7 @@ void op_pop(stack_t **sp)
 
     if (!*sp)
     {
-        fprintf(stderr, "L%u: can't pop an empty stack\n", op_env.lineno);
-        exit(EXIT_FAILURE);
+        fprintf(stderr, "L%lu: can't pop an empty stack\n", (unsigned long)op_env.lineno);
     }
 
     if (*sp != (*sp)->prev)

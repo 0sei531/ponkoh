@@ -1,15 +1,8 @@
 #ifndef MONTY_H
 #define MONTY_H
 
-#define _GNU_SOURCE
 #include <stdio.h>
-#include <unistd.h>
-#include <string.h>
 #include <stdlib.h>
-#include <ctype.h>
-#include <stdarg.h>
-
-/** Stack **/
 
 /**
  * struct stack_s - doubly linked list representation of a stack (or queue)
@@ -18,7 +11,7 @@
  * @next: points to the next element of the stack (or queue)
  *
  * Description: doubly linked list node structure
- * for stack, queues, LIFO, FIFO
+ * for stack, queues, LIFO, FIFO Holberton project
  */
 typedef struct stack_s
 {
@@ -27,56 +20,82 @@ typedef struct stack_s
 	struct stack_s *next;
 } stack_t;
 
-extern stack_t *head;
-
-/* Struct */
+typedef void (*instruction_fn)(stack_t **);
 
 /**
  * struct instruction_s - opcode and its function
  * @opcode: the opcode
- * @f: function to handle the opcode
+ * @fn: function to handle the opcode
  *
  * Description: opcode and its function
- * for stack, queues, LIFO, FIFO
+ * for stack, queues, LIFO, FIFO Holberton project
  */
 typedef struct instruction_s
 {
 	char *opcode;
-	void (*f)(stack_t **stack, unsigned int line_number);
+	instruction_fn fn;
 } instruction_t;
 
-typedef void (*opcode_function)(stack_t **, unsigned int);
+/**
+ * enum stack_mode_n - stack mode enumeration
+ * @LIFO: operate as a stack
+ * @FIFO: operate as a queue
+ */
+typedef enum stack_mode_n
+{
+	LIFO = 0,
+	FIFO = 1
+} stack_mode_t;
 
-/* Data structure operations*/
-stack_t *create_node(int data);
-void free_node(void);
-void call_function(opcode_function func, char *op_code, char *num, int line_number, int data_structure);
-void find_function(char *opcode, char *opcode_argument, int line_number, int data_structure);
-int tokenize(char *input, int line_number, int data_structure);
-void open_file(char *pathname);
-void read_input_in_file(FILE *fd);
-void add_to_queue(stack_t **new_node, unsigned int line_number);
+/**
+ * struct op_env_s - operation environment
+ * @sp: top of the stack
+ * @argv: argument vector
+ * @line: line buffer
+ * @linesz: line buffer size
+ * @lineno: line number
+ * @mode: stack operation mode
+ */
+typedef struct op_env_s
+{
+	stack_t *sp;
+	char **argv;
+	char *line;
+	size_t linesz;
+	size_t lineno;
+	stack_mode_t mode;
+} op_env_t;
 
-/* Opcode operations */
-void push(stack_t **new_node, unsigned int line_number);
-void print_entire_stack(stack_t **stack, __attribute__((unused))unsigned int line_number);
-void print_stack_top(stack_t **stack, unsigned int line_number);
-void pop(stack_t **stack, unsigned int line_number);
-void swap(stack_t **stack, unsigned int line_number);
-void add(stack_t **stack, unsigned int line_number);
-void nop(stack_t **stack, unsigned int line_number);
-void sub(stack_t **stack, unsigned int line_number);
-void div_nodes(stack_t **stack, unsigned int line_number);
-void mul(stack_t **stack, unsigned int line_number);
-void mod(stack_t **stack, unsigned int line_number);
-void print_char(stack_t **stack, unsigned int line_number);
-void print_string(stack_t **stack, unsigned int line_number);
-void rotl(stack_t **stack, unsigned int line_number);
-void rotr(stack_t **stack, unsigned int line_number);
+extern op_env_t op_env;
 
-/** Print errors **/
-void print_error(int error_code, ...);
-void print_other_errors(int error_code, ...);
-void print_more_errors(int error_code, ...);
+instruction_fn get_instruction_fn(const char *opcode);
 
-#endif
+void op_add(stack_t **sp);
+void op_div(stack_t **sp);
+void op_mod(stack_t **sp);
+void op_mul(stack_t **sp);
+void op_nop(stack_t **sp);
+void op_pall(stack_t **sp);
+void op_pchar(stack_t **sp);
+void op_pint(stack_t **sp);
+void op_pop(stack_t **sp);
+void op_pstr(stack_t **sp);
+void op_push(stack_t **sp);
+void op_queue(stack_t **sp);
+void op_rotl(stack_t **sp);
+void op_rotr(stack_t **sp);
+void op_stack(stack_t **sp);
+void op_sub(stack_t **sp);
+void op_swap(stack_t **sp);
+
+char **tokenize(char *str);
+size_t count_tokens(const char *str);
+
+void free_op_env(void);
+void free_stack(stack_t **sp);
+
+void pfailure(const char *fmt, ...);
+
+int isinteger(const char *str);
+
+#endif /* MONTY_H */

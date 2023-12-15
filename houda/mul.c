@@ -8,21 +8,12 @@
 
 void op_mul(stack_t **sp)
 {
-	 int to_mul = 0;
-
-    // Check if the stack has at least two elements
-    if (!(*sp && *sp != (*sp)->next))
+	if (!(*sp && (*sp)->next))
     {
-        fprintf(stderr, "L%u: can't mul, stack too short\n", op_env.lineno);
-        exit(EXIT_FAILURE);
+        fprintf(stderr, "L%lu: can't mul, stack too short\n", op_env.lineno);
+        return;
     }
 
-    // Store the value of the top element
-    to_mul = (*sp)->n;
-
-    // Remove the top element from the stack
+    (*sp)->next->n *= (*sp)->n;
     op_pop(sp);
-
-    // Multiply the new top element by the stored value
-    (*sp)->n *= to_mul;
 }

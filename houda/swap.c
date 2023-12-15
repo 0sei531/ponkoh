@@ -8,18 +8,15 @@
 
 void op_swap(stack_t **sp)
 {
-	stack_t *p = *sp;
+	 int tmp;
 
-    // Check if the stack has at least two elements
-    if (!(p && p != p->next))
+    if (!(*sp && (*sp)->next))
     {
-        fprintf(stderr, "L%u: can't swap, stack too short\n", op_env.lineno);
-        exit(EXIT_FAILURE);
+        fprintf(stderr, "L%lu: can't swap, stack too short\n", op_env.lineno);
+        return;
     }
 
-    // Swap the values using XOR operations
-    p->n ^= p->prev->n;
-    p->prev->n ^= p->n;
-    p->n ^= p->prev->n;
-
+    tmp = (*sp)->n;
+    (*sp)->n = (*sp)->next->n;
+    (*sp)->next->n = tmp;
 }

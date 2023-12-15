@@ -8,28 +8,23 @@
 
 void op_mod(stack_t **sp)
 {
-	 int to_mod = 0;
+	 unsigned long int to_mod = 0;
 
-    // Check if the stack has at least two elements
     if (!(*sp && *sp != (*sp)->next))
     {
-        fprintf(stderr, "L%u: can't mod, stack too short\n", op_env.lineno);
-        exit(EXIT_FAILURE);
+        fprintf(stderr, "L%lu: can't mod, stack too short\n", (unsigned long)op_env.lineno);
     }
 
-    // Store the value of the top element
     to_mod = (*sp)->n;
 
-    // Check for division by zero
     if (!to_mod)
     {
-        fprintf(stderr, "L%u: division by zero\n", op_env.lineno);
-        exit(EXIT_FAILURE);
+        fprintf(stderr, "L%lu: division by zero\n", (unsigned long)op_env.lineno);
     }
 
-    // Remove the top element from the stack
-    op_pop(sp);
+    /* Remove the top element from the stack
+    op_pop(sp);*/
 
-    // Calculate the modulo of the new top element by the stored value
-    (*sp)->n %= to_mod;
+    /* Calculate the modulo of the new top element by the stored value
+    (*sp)->n %= to_mod;*/
 }
